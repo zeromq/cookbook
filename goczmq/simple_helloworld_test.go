@@ -71,7 +71,7 @@ func SimpleHelloWorldClient(t *testing.T) {
 func SimpleHelloWorldServer(t *testing.T) {
 	t.Logf("server starting...")
 
-	// Create a ZMQ_REP client using a "smart constructor".
+	// Create a ZMQ_REP server using a "smart constructor".
 	// See: https://godoc.org/github.com/zeromq/goczmq#NewRep
 
 	server, err := goczmq.NewRep("tcp://*:5555")
