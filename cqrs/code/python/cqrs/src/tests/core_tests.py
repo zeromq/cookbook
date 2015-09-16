@@ -22,11 +22,13 @@
 
 import unittest
 import nose
+from core.commands import CommandHandler
 
 
 class CommandRegistryTest(unittest.TestCase):
 
     def test_core(self):
+        handler = CommandHandler()
 
         nose.tools.ok_(True)
 
