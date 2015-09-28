@@ -20,22 +20,20 @@
 # CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #
 
-import unittest
-import nose
-from core.handlers import CommandHandler, CommandHandlerRegistry
+import logging
+import zmq
+from zmq.eventloop import zmqstream
+
+logger = logging.getLogger('cqrs-core')
 
 
-class CommandRegistryTest(unittest.TestCase):
+class CommandRequest:
 
-    def test_core(self):
-        registry = CommandHandlerRegistry()
-        handler = registry.createCommandHandler('test', 'tcp://*:5555')
+    def __init__(self, name):
+        self.name = name
 
-        handler.start()
+    @property
+    def get_name(self):
+        return self.name
 
-
-
-        handler.stop()
-
-        nose.tools.ok_(True)
 

@@ -4,31 +4,31 @@ CQRS Style Architecture with 0MQ
 Features
 -----------
 
- **- Message protocol** 
- **- Error handling for validation and execution problems**
- **- Read model** (QueryHandlers)
+ ** Message protocol** 
+ ** Error handling for validation and execution problems**
+ ** Read model** (QueryHandlers)
 	 - De-normalization
 	 -  Aggregation
- **- Writing model** (CommandHandlers)
+ ** Writing model** (CommandHandlers)
 	 - Command definition
 	 - Command execution error handling
 	 - Reliable change notification to read model
- **- Persistence** (EventStore)
+ ** Persistence** (EventStore)
 	 - Append-only
-	 - Read-only database
+	 - Read-model database
 
 Components involved
 ---------------------------
 
-**- Connector** - client that send a Command or QueryRequest message to a CommandHandler or a QueryHandler
+** Connector** - client that send a Command or QueryRequest message to a CommandHandler or a QueryHandler
 
-**- CommandHandler** - server that receive Command message to processes from a client. The CommandHandler must garantee that each Event must be delivered and persisted by EventStore.
+** CommandHandler** - server that receive Command message to processes from a client. The CommandHandler must garantee that each Event must be delivered and persisted by EventStore.
 
-**- EventStore** - server that receive Event to persist on specific event store, each event store are identified by there respective event name. EventStore must notify every 
+** EventStore** - server that receive Event to persist on specific event store, each event store are identified by there respective event name. EventStore must notify every 
 
-**- ProjectionsStore** - pipeline that receive change notifications from EventStore and update and specific data view. 
+** ProjectionsStore** - pipeline that receive change notifications from EventStore and update and specific data view. 
 
-**- QueryHandler** - server that receive a QueryRequest and run queries in one ProjectionStore.
+** QueryHandler** - server that receive a QueryRequest and run queries in one ProjectionStore.
 
 Message Protocol
 ----------------------

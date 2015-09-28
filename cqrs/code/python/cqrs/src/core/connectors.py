@@ -20,22 +20,42 @@
 # CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #
 
-import unittest
-import nose
-from core.handlers import CommandHandler, CommandHandlerRegistry
+import logging
+import zmq
+from zmq.eventloop import zmqstream
+
+logger = logging.getLogger('cqrs-core')
 
 
-class CommandRegistryTest(unittest.TestCase):
+class Connector:
 
-    def test_core(self):
-        registry = CommandHandlerRegistry()
-        handler = registry.createCommandHandler('test', 'tcp://*:5555')
+    def __init__(self, name, end_point, context=None):
+        self._context = context or zmq.Context.instance()
+        self._name = name
+        self._end_point = end_point
 
-        handler.start()
+        logger.info('command handler initialized')
+
+    def _on_recv(self, stream, msg):
+        logger.info('data received')
 
 
+class CommandHandlerConnector(Connector):
 
-        handler.stop()
+    def __init__(self, name, end_point, context=None):
+        super(CommandHandlerConnector, self).__init__(name, end_point, context)
+        self._sockt = self._context.socket(zmq.REQ)
+        self._stream = zmqstream.ZMQStream(self._sockt)
+        self._stream.on_recv_stream(self._on_recv)
 
-        nose.tools.ok_(True)
+    def connect(self):
+        self._sockt.connect(self._end_point)
 
+    def send(self, data):
+        self._sockt.send_pyobj(data)
+
+
+class QueryHandlerConnector(Connector):
+
+    def __init__(self, name, end_point, context=None):
+        super(QueryHandlerConnector, self).__init__(name, end_point, context)

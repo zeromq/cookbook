@@ -26,26 +26,19 @@ from zmq.eventloop import zmqstream
 
 logger = logging.getLogger('cqrs-core')
 
-class CommandRequest:
-
-    def __init__(self, end_point, server, sockt):
-        self._end_point = None
-        self._server = server
-        logger.info('c ommand request initialized')
-
-    def start(self):
-        self._sockt.setsockopt(zmq.IDENTITY, self._end_point)
-        self._sockt.connect(self._server)
-        logger.info('command request started')
-
 
 class CommandHandler:
 
-    def __init__(self, registry, end_point, sockt):
+    def __init__(self, registry, name, end_point, sockt):
+        self._name = name
         self._end_point = end_point
         self._stream = zmqstream.ZMQStream(sockt)
         self._registry = registry
         logger.info('command handler initialized')
+
+    @property
+    def get_name(self):
+        return self._name
 
     def start(self):
         self._stream.on_recv_stream(self._on_recv)
@@ -70,23 +63,24 @@ class CommandHandler:
     def on_execution(self):
         pass
 
-    def command_handler(self, arguments):
+    def handle(self, arguments):
 
         if self.on_validation(arguments):
             self.on_execution()
 
 
-class CommandRegistry:
+class CommandHandlerRegistry:
 
-    def __init__(self):
+    def __init__(self, context=None):
+        self._context = context or zmq.Context.instance()
         self._commands = {}
-        self._context = zmq.Context()
 
-    def _create_command(self, ep):
+    def createCommandHandler(self, name, end_point):
 
-        if not self._commands.get(ep):
+        if not self._commands.get(end_point):
             s = self._context.socket(zmq.ROUTER)
-            self._commands[ep] = CommandHandler(ep, s)
+            self._commands[end_point] = CommandHandler(self, name, end_point, s)
+        return self._commands.get(end_point)
 
     def add_command(self, end_point):
         pass
