@@ -32,8 +32,11 @@ class MyCommandHandler(CommandHandler):
         CommandHandler.__init__(self, name, end_point)
 
     def _on_recv(self, stream, msg):
-        print('peer {0} message {1}'. format(msg[0], msg[2]))
-        stream.send(msg[2], copy=False)
+        print('receive peer message {0}'. format(msg[0]))
+        stream.send('command: ok for message: {0}'.format(msg[0]), copy=False)
+
+    def _on_send(self, stream, msg, status):
+        print('send peer message {0}'. format(msg[0]))
 
 if __name__ == "__main__":
 

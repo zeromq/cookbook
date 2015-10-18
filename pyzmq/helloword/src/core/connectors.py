@@ -64,7 +64,7 @@ class CommandConnector(Connector):
         Connector.__init__(self,  name, end_point, context)
         self._sockt = self._context.socket(zmq.REQ)
         self._sockt.setsockopt(zmq.IDENTITY, self._name)
-
+        self._stream = zmqstream.ZMQStream(self._sockt)
         self.log = logger.getChild('command-connector')
 
     def connect(self):

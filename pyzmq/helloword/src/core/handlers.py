@@ -19,10 +19,13 @@
 # IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 # CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #
+from abc import abstractmethod
 
 import logging
 import zmq
-from zmq.eventloop import zmqstream
+from zmq.eventloop import ioloop, zmqstream
+
+loop = ioloop.IOLoop().instance()
 
 logger = logging.getLogger(__name__)
 ch = logging.StreamHandler()
@@ -44,10 +47,9 @@ class CommandHandler:
         self._context = zmq.Context.instance()
         self._name = name
         self._end_point = end_point
-        self._sockt = self._context.socket(zmq.ROUTER)
+        self._sockt = self._context.socket(zmq.REP)
         self._stream = zmqstream.ZMQStream(self._sockt)
         self._stream.on_recv_stream(self._on_recv)
-        self._stream.on_send_stream(self._on_send)
         self.log = logger
 
     @property
@@ -64,8 +66,10 @@ class CommandHandler:
         self._stream.close()
         self.log.info('command handler stopped')
 
+    @abstractmethod
     def _on_recv(self, stream, msg):
         pass
 
+    @abstractmethod
     def _on_send(self, stream, msg, status):
         pass
