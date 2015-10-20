@@ -1,26 +1,26 @@
 Problem: I don't know zeromq and want to learn the simplest usage, show me some code
 ==============================================
 
-The simplest example is request-reply. You want to send a message and receive a reply.
+The simplest example is client-server. Client sends "Hello" and server replies with "World".
 
 The recipe is divided to a client and server, client connects to the server and send a request, server binds and sending a reply.
 
-Client uses a REQ socket type, the REQ socket type must first send a message and then wait for reply message.
-Server uses a REP socket type, the REP socket type must first wait for request message and then send a reply message.
+Client uses a CLIENT socket type.
+Server uses a SERVER socket type.
 
 Clients steps:
 
-1. Create a REQ socket
+1. Create a CLIENT socket
 2. Connect to the server
-3. Send an "Hello" request messae
-4. Receive a message
+3. Send "Hello" request message
+4. Receive reply message
 
 Server steps:
 
-1. Create REP socket
+1. Create SERVER socket
 2. Binds the socket
-3. Receive a request message
-4. Send a "World" reply message
+3. Receive request message
+4. Send "World" reply message
 
 Implementations:
 
