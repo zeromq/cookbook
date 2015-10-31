@@ -10,7 +10,7 @@ in the same directory as this file.
 package main
 
 import (
-	"testing"
+	"log"
 
 	"github.com/zeromq/goczmq"
 )
@@ -19,15 +19,15 @@ import (
 // * Creates a ZMQ_REQ socket
 // * Sends a "Hello" message
 // * Waits for a "World" reply
-func SimpleHelloWorldClient(t *testing.T) {
-	t.Logf("client starting...")
+func SimpleHelloWorldClient() {
+	log.Printf("client starting...")
 
 	// Create a ZMQ_REQ client using a "smart constructor".
 	// See: https://godoc.org/github.com/zeromq/goczmq#NewReq
 
 	client, err := goczmq.NewReq("tcp://localhost:5555")
 	if err != nil {
-		t.Fatalf("client.NewReq error: %s", err)
+		log.Fatalf("client.NewReq error: %s", err)
 	}
 
 	// Here, we make sure the socket is destroyed
@@ -47,10 +47,10 @@ func SimpleHelloWorldClient(t *testing.T) {
 
 	err = client.SendMessage(request)
 	if err != nil {
-		t.Fatalf("client.SendMessage error: %s", err)
+		log.Fatalf("client.SendMessage error: %s", err)
 	}
 
-	t.Logf("client.SendMessage '%s'", request)
+	log.Printf("client.SendMessage '%s'", request)
 
 	// Receive the reply message from the server. Note that
 	// this RecvMessage() call will block forever waiting
@@ -58,25 +58,25 @@ func SimpleHelloWorldClient(t *testing.T) {
 
 	reply, err := client.RecvMessage()
 	if err != nil {
-		t.Fatalf("client.RecvMessage error: %s", err)
+		log.Fatalf("client.RecvMessage error: %s", err)
 	}
 
-	t.Logf("client.RecvMessage: '%s'", reply)
+	log.Printf("client.RecvMessage: '%s'", reply)
 }
 
 // SimpleHelloWorldServer does the following:
 // * Creates a ZMQ_REP socket
 // * Waits for a "Hello" request
 // * Sends a "World" reply
-func SimpleHelloWorldServer(t *testing.T) {
-	t.Logf("server starting...")
+func SimpleHelloWorldServer() {
+	log.Printf("server starting...")
 
 	// Create a ZMQ_REP server using a "smart constructor".
 	// See: https://godoc.org/github.com/zeromq/goczmq#NewRep
 
 	server, err := goczmq.NewRep("tcp://*:5555")
 	if err != nil {
-		t.Fatalf("server.NewRep error: %s", err)
+		log.Fatalf("server.NewRep error: %s", err)
 	}
 
 	// Here, we make sure the socket is destroyed
@@ -91,10 +91,10 @@ func SimpleHelloWorldServer(t *testing.T) {
 
 	request, err := server.RecvMessage()
 	if err != nil {
-		t.Fatalf("server.RecvMessage error: %s", err)
+		log.Fatalf("server.RecvMessage error: %s", err)
 	}
 
-	t.Logf("server.RecvMessage: '%s'", request)
+	log.Printf("server.RecvMessage: '%s'", request)
 
 	// Here we create a reply message. GoCZMQ uses slices
 	// of byte slices for messages, because they map
@@ -106,15 +106,15 @@ func SimpleHelloWorldServer(t *testing.T) {
 
 	err = server.SendMessage(reply)
 	if err != nil {
-		t.Fatalf("server.SendMessage error: %s", err)
+		log.Fatalf("server.SendMessage error: %s", err)
 	}
 
-	t.Logf("server.SendMessage: '%s'", reply)
+	log.Printf("server.SendMessage: '%s'", reply)
 }
 
 // TestSimpleHelloWorld starts SimpleHelloWorldServer in
 // a goroutine, then starts a SimpleHelloWorldClient
-func TestSimpleHelloWorld(t *testing.T) {
-	go SimpleHelloWorldServer(t)
-	SimpleHelloWorldClient(t)
+func main() {
+	go SimpleHelloWorldServer()
+	SimpleHelloWorldClient()
 }
