@@ -19,9 +19,41 @@
 # IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 # CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #
+import threading
+
+import unittest
+import nose
+from zmq.eventloop import ioloop
+from core.connectors import CommandConnector
+from core.handlers import CommandHandler
 
 
-from logging.config import fileConfig
+class MyCommandConnector(CommandConnector):
 
-fileConfig('logging.ini')
+    def __init__(self, name, end_point, handler):
+        CommandConnector.__init__(self, name, end_point)
+        self._stream.on_recv_stream(self._on_recv)
+        self._handler = handler
+        self._handler.start()
+
+    def _on_recv(self, stream, msg):
+        stream.close()
+
+        print(msg[2])
+        # self._handler.stop()
+        nose.tools.ok_('hello word' == msg[2])
+
+
+class CommunicationTest(unittest.TestCase):
+
+    def connector_start(self):
+        server = 'tcp://127.0.0.1:5555'
+        handler = MyCommandHandler('MyCommandHandler', server)
+        client = MyCommandConnector('MyCommandConnector', server, handler)
+        client.connect()
+
+        data = 'hello word'
+        client.send(data)
+
+        loop.start()
 

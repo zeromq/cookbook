@@ -19,55 +19,35 @@
 # IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 # CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #
-
-
 from abc import abstractmethod
-import logging
 
+import logging
 import zmq
 from zmq.eventloop import zmqstream
 
 
-class Connector:
+class CommandWorker:
 
-    def __init__(self, name, end_point, context=None):
+    def __init__(self, name, end_point, context = None):
         self._context = context or zmq.Context.instance()
         self._name = name
         self._end_point = end_point
-
-    @abstractmethod
-    def connect(self):
-        pass
-
-    @abstractmethod
-    def _on_recv(self, sock, msg):
-        pass
-
-    @abstractmethod
-    def send(self, data):
-        pass
-
-
-class CommandConnector(Connector):
-
-    def __init__(self,  name, end_point, context=None):
-        Connector.__init__(self,  name, end_point, context)
-        self._sockt = self._context.socket(zmq.REQ)
-        self._sockt.setsockopt(zmq.IDENTITY, self._name)
+        self._sockt = self._context.socket(zmq.REP)
         self.log = logging.getLogger(__name__)
 
+    @property
+    def get_name(self):
+        return self._name
+
     def connect(self):
-        self.log.info(' try connect to {0} '.format(self._end_point))
-        self._sockt.connect(str(self._end_point))
-        self.log.info('connected to {0} '.format(self._end_point))
+        self._sockt.connect(self._end_point)
+        self.log.info('command worker connected to {0}'.format(self._end_point))
 
-    def send(self, data):
-        self._sockt.send(data, copy=False)
-        msg = self._sockt.recv()
-        self._on_recv(self._sockt, msg)
+        while True:
+            msg = self._sockt.recv(copy=False)
+            self.log.info('work requested {0}'.format(msg))
+            self._on_recv(msg)
 
-
-class QueryHandlerConnector(Connector):
-
-    def __init__(self,  name, end_point, context=None):
-        Connector.__init__(self,  name, end_point, context)
+    @abstractmethod
+    def _on_recv(self, msg):
+        pass
