@@ -19,28 +19,36 @@
 # IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 # CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #
+import time
 
-from zmq.eventloop import ioloop
-from core.handlers import CommandHandler
-
-loop = ioloop.IOLoop.instance()
+from core.workers import CommandWorker
 
 
-class MyCommandHandler(CommandHandler):
+class MyCommandWorker(CommandWorker):
 
     def __init__(self, name, end_point):
-        CommandHandler.__init__(self, name, end_point)
+        CommandWorker.__init__(self, name, end_point)
 
-    def _on_recv(self, stream, msg):
-        print('receive peer message {0}'. format(msg[0]))
-        stream.send('command: ok for message: {0}'.format(msg[0]), copy=False)
+    def _on_recv(self, msg):
 
-    def _on_send(self, stream, msg, status):
-        print('send peer message {0}'. format(msg[0]))
+        self._sockt.send(msg)
+        time.sleep(1)
+        self.log.info('work finished {0}'. format(msg))
+
 
 if __name__ == "__main__":
 
-    server = 'tcp://127.0.0.1:5555'
-    handler = MyCommandHandler('MyCommandHandler', server)
-    handler.start()
-    loop.start()
+    server = 'tcp://127.0.0.1:5556'
+
+    try:
+        for i in range(1,2):
+            worker = MyCommandWorker('MyCommandWorker-{0}'.format(i), server)
+            worker.connect()
+
+            while True:
+                pass
+    except KeyboardInterrupt, error:
+        pass
+
+
+

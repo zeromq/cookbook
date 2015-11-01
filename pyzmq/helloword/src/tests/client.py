@@ -20,21 +20,18 @@
 # CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #
 import time
-from zmq.eventloop import ioloop
 
 from core.connectors import CommandConnector
-
-loop = ioloop.IOLoop().instance()
 
 
 class MyCommandConnector(CommandConnector):
 
     def __init__(self, name, end_point):
         CommandConnector.__init__(self, name, end_point)
-        self._stream.on_recv_stream(self._on_recv)
 
-    def _on_recv(self, stream, msg):
-        print('command executed: {0}'.format(msg[0]))
+    def _on_recv(self, sock, msg):
+        self.log.info('command executed: {0}'.format(msg))
+        time.sleep(1)
 
 
 if __name__ == "__main__":
@@ -42,8 +39,14 @@ if __name__ == "__main__":
     client = MyCommandConnector('MyCommandConnector', server)
     client.connect()
 
-    data = 'hello word'
+    try:
 
-    client.send(data)
+        while True:
+            data = b'hello word'
+            client.send(data)
+            time.sleep(3)
 
-    loop.start()
+    except KeyboardInterrupt, error:
+        pass
+
+
