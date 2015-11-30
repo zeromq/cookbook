@@ -62,4 +62,7 @@ target/
 #.idea/*
 
 #mkdocs generated files
-site/*
+site/
+
+# netmq projects
+packages/**
