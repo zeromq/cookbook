@@ -1,4 +1,8 @@
-## Introduction
+## Problem: We need a reference implementation of CQRS style architecture.
+=================================================================
+
+description here
+
 
 ## Design
 ![diagram missing](img/0.jpg)
@@ -15,9 +19,9 @@
 ###6. Domain events persistence
 ###7. Domain events projections
 
-## Code
-  - [Python](../pyzmq)
-  - [Javascript](../jszmq)
+## Implementations:
+
+* [PyZMQ](https://github.com/zeromq/cookbook/blob/master/pyzmq/cqrs)
 
 ## References
 - [CQRS](http://martinfowler.com/bliki/CQRS.html) - http://martinfowler.com/bliki/CQRS.html

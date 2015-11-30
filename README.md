@@ -2,11 +2,8 @@
 
 Recipes:
 
-* [Hello World](HelloWorld.md)
-
-To deploy to gh-pages execute:
-
-
+* [Hello World](docs/helloworld.md)
+* [CQRS](docs/cqrs.md)
 
 
 
