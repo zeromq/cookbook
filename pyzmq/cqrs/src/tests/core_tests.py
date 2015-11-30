@@ -20,8 +20,22 @@
 # CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #
 
+import unittest
+import nose
+from core.handlers import CommandHandler, CommandHandlerRegistry
 
-from logging.config import fileConfig
 
-fileConfig('logging.ini')
+class CommandRegistryTest(unittest.TestCase):
+
+    def test_core(self):
+        registry = CommandHandlerRegistry()
+        handler = registry.createCommandHandler('test', 'tcp://*:5555')
+
+        handler.start()
+
+
+
+        handler.stop()
+
+        nose.tools.ok_(True)
 

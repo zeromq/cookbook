@@ -1,0 +1,12 @@
+site_name: Cookbook
+pages:
+- Home: index.md
+- Recipes:
+  - Helloworld: helloworld.md
+  - CQRS Style Architecture: cqrs.md
+
+- Changelog: changelog.md
+
+theme: readthedocs
+repo_url: https://github.com/zeromq/cookbook/
+markdown_extensions: [codehilite]

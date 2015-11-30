@@ -60,3 +60,16 @@ docs/_build/
 target/
 
 #.idea/*
+
+#mkdocs generated files
+site/
+
+# netmq projects
+packages/**
+
+.idea/**
+
+bin/**
+
+obj/**
+

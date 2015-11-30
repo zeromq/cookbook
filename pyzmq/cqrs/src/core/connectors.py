@@ -20,12 +20,11 @@
 # CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #
 
-
-from abc import abstractmethod
 import logging
-
 import zmq
 from zmq.eventloop import zmqstream
+
+logger = logging.getLogger('cqrs-core')
 
 
 class Connector:
@@ -35,39 +34,28 @@ class Connector:
         self._name = name
         self._end_point = end_point
 
-    @abstractmethod
-    def connect(self):
-        pass
+        logger.info('command handler initialized')
 
-    @abstractmethod
-    def _on_recv(self, sock, msg):
-        pass
-
-    @abstractmethod
-    def send(self, data):
-        pass
+    def _on_recv(self, stream, msg):
+        logger.info('data received')
 
 
-class CommandConnector(Connector):
+class CommandHandlerConnector(Connector):
 
-    def __init__(self,  name, end_point, context=None):
-        Connector.__init__(self,  name, end_point, context)
+    def __init__(self, name, end_point, context=None):
+        super(CommandHandlerConnector, self).__init__(name, end_point, context)
         self._sockt = self._context.socket(zmq.REQ)
-        self._sockt.setsockopt(zmq.IDENTITY, self._name)
-        self.log = logging.getLogger(__name__)
+        self._stream = zmqstream.ZMQStream(self._sockt)
+        self._stream.on_recv_stream(self._on_recv)
 
     def connect(self):
-        self.log.info(' try connect to {0} '.format(self._end_point))
-        self._sockt.connect(str(self._end_point))
-        self.log.info('connected to {0} '.format(self._end_point))
+        self._sockt.connect(self._end_point)
 
     def send(self, data):
-        self._sockt.send(data, copy=False)
-        msg = self._sockt.recv()
-        self._on_recv(self._sockt, msg)
+        self._sockt.send_pyobj(data)
 
 
 class QueryHandlerConnector(Connector):
 
-    def __init__(self,  name, end_point, context=None):
-        Connector.__init__(self,  name, end_point, context)
+    def __init__(self, name, end_point, context=None):
+        super(QueryHandlerConnector, self).__init__(name, end_point, context)

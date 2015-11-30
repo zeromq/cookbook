@@ -2,7 +2,8 @@
 
 Recipes:
 
-* [Hello World](HelloWorld.md)
+* [Hello World](docs/helloworld.md)
+* [CQRS](docs/cqrs.md)
 
 
 

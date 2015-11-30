@@ -20,39 +20,3 @@
 # CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #
 
-from core.handlers import CommandHandler
-from core.workers import CommandWorker
-
-class MyCommandHandler(CommandHandler):
-
-    def __init__(self, name, frontend, backend):
-        CommandHandler.__init__(self, name, frontend, backend)
-
-    def _on_recv_frontend(self, stream, msg):
-        self.log.info('handling request from client {0}'. format(msg))
-        self._backend.send_multipart(msg)
-
-    def _on_err_frontend(self, stream, msg, status):
-        self.log.info('error on client request {0}'. format(msg))
-
-    def _on_recv_backend(self, stream, msg):
-        self.log.info('handling answer from worker {0}'. format(msg))
-        self._frontend.send_multipart(msg)
-
-    def _on_err_backend(self, stream, msg):
-        self.log.info('error on worker processing {0}'. format(msg))
-
-
-if __name__ == "__main__":
-
-    frontend = 'tcp://127.0.0.1:5555'
-    backend = 'tcp://127.0.0.1:5556'
-    handler = MyCommandHandler('MyCommandHandler', frontend, backend)
-
-    try:
-        handler.start()
-    except KeyboardInterrupt, error:
-        pass
-
-
-

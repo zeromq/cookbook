@@ -19,36 +19,21 @@
 # IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 # CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #
-import time
 
-from core.workers import CommandWorker
+import logging
+import zmq
+from zmq.eventloop import zmqstream
 
-
-class MyCommandWorker(CommandWorker):
-
-    def __init__(self, name, end_point):
-        CommandWorker.__init__(self, name, end_point)
-
-    def _on_recv(self, msg):
-
-        self._sockt.send(msg)
-        time.sleep(1)
-        self.log.info('work finished {0}'. format(msg))
+logger = logging.getLogger('cqrs-core')
 
 
-if __name__ == "__main__":
+class CommandRequest:
 
-    server = 'tcp://127.0.0.1:5556'
+    def __init__(self, name):
+        self.name = name
 
-    try:
-        for i in range(1,2):
-            worker = MyCommandWorker('MyCommandWorker-{0}'.format(i), server)
-            worker.connect()
-
-            while True:
-                pass
-    except KeyboardInterrupt, error:
-        pass
-
+    @property
+    def get_name(self):
+        return self.name
 
 
