@@ -3,8 +3,8 @@ Problem: I don't know zeromq and want to learn the simplest usage, show me some 
 
 The simplest example is client-server. Client sends "Hello" and server replies with "World".
 
-## Design
-=========
+Design
+======
 
 The recipe is divided to a client and server, client connects to the server and send a request, server binds and sending a reply.
 
@@ -25,17 +25,15 @@ Server steps:
 3. Receive request message
 4. Send "World" reply message
 
-## Implementations:
+Implementations:
 ===================
-
 * [GOCZMQ](https://github.com/zeromq/cookbook/blob/master/goczmq/simple_helloworld_test.go)
 * [NetMQ](https://github.com/zeromq/cookbook/blob/master/netmq/HelloWorld.cs)
 * [PyZMQ](https://github.com/zeromq/cookbook/blob/master/pyzmq/helloword)
 
-## References:
+References:
 ==============
-
 * [NetMQ](http://netmq.readthedocs.org/en/latest/)
 * [goczmq](https://github.com/zeromq/goczmq)
-* [PyZMQ] (http://learning-0mq-with-pyzmq.readthedocs.org/en/latest/pyzmq/patterns/client_server.html)
+* [PyZMQ](http://learning-0mq-with-pyzmq.readthedocs.org/en/latest/pyzmq/patterns/client_server.html)
 * [PyZMQ Examples](https://github.com/zeromq/pyzmq/blob/master/examples/)

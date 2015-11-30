@@ -1,8 +1,7 @@
-## Problem: We need a reference implementation of CQRS style architecture.
-=================================================================
+Problem: We need a reference implementation of CQRS style architecture.
+=================================================
 
-description here
-
+We need a reference implementation of CQRS style architecture.
 
 ## Design
 ![diagram missing](img/0.jpg)
@@ -20,7 +19,6 @@ description here
 ###7. Domain events projections
 
 ## Implementations:
-
 * [PyZMQ](https://github.com/zeromq/cookbook/blob/master/pyzmq/cqrs)
 
 ## References

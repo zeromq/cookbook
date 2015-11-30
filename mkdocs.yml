@@ -1,28 +1,11 @@
 site_name: Cookbook
 pages:
-- Home: cqrs.md
+- Home: index.md
 - Recipes:
+  - Helloworld: helloworld.md
   - CQRS Style Architecture: cqrs.md
-  - Code:
-    - Python: python.md
-    - javascript: javascript.md
+
 - Changelog: changelog.md
-#  - Reference implementations: python.md
-#- Introduction: introduction.md
-#- Concepts:
-#  - Receiving and Sending: receiving-sending.md
-#  - Messages: message.md
-#  - Transports: transports.md
-#- Components:
-#  - Poller: poller.md
-#  - Actor: actor.md
-#  - Beacon: beacon.md
-#- Patterns:
-#  - Request-Response: request-response.md
-#  - Pub-Sub: pub-sub.md
-#  - Push-Pull: push-pull.md
-#  - Router-Dealer: router-dealer.md
-#  - XSub-XPub: xpub-xsub.md
 
 theme: readthedocs
 repo_url: https://github.com/zeromq/cookbook/
